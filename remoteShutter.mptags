@@ -1,0 +1,54 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.5.4	//
+!_TAG_REVISION_NAME	MCHPTags	//
+!_TAG_REVISION_VERSION	6.0.1	//
+Adjust	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	29;"	v	line:29
+DEEPROM	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.asm	17;"	l	line:17
+EndInc	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	115;"	l	line:115
+EndInc	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	67;"	l	line:67
+EndProgram	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.asm	87;"	l	line:87
+ErrInt	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	28;"	v	line:28
+ErrVal	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	27;"	v	line:27
+Fosc	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.asm	7;"	q	line:7
+INT	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	11;"	l	line:11
+IfZeroGoto	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	92;"	m	line:92
+LongAdd	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	97;"	m	line:97
+LongCopy	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	70;"	m	line:70
+LongDec	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	107;"	m	line:107
+LongInc	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	60;"	m	line:60
+LongLoad	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	53;"	m	line:53
+LongNeg	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	131;"	m	line:131
+LongRLF	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	78;"	m	line:78
+LongRRF	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	83;"	m	line:83
+LongSub	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	118;"	m	line:118
+MainLoop	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.asm	71;"	l	line:71
+NewState	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	23;"	v	line:23
+NopLoop	C:\Users\Igor\Documents\Code\microchip\remoteShutter\two.asm	18;"	l	line:18
+OldState	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	26;"	v	line:26
+PORTAInputs	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.asm	21;"	q	line:21
+PORTBInputs	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.asm	23;"	q	line:23
+PORTBSerial	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.asm	24;"	q	line:24
+PROG	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.asm	29;"	l	line:29
+PwmVal	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	30;"	v	line:30
+RST	C:\Users\Igor\Documents\Code\microchip\remoteShutter\two.asm	12;"	l	line:12
+RestoreState	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	45;"	m	line:45
+SAVE_STATUS	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	20;"	v	line:20
+SAVE_W	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	19;"	v	line:19
+SPBRG_VALUE	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	140;"	q	line:140
+SaveState	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	37;"	m	line:37
+SerialSpd	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.asm	6;"	q	line:6
+SetupSerial	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	145;"	l	line:145
+StateSaveMemory	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	18;"	l	line:18
+TEMP	C:\Users\Igor\Documents\Code\microchip\remoteShutter\two.asm	7;"	v	line:7
+TEMP2	C:\Users\Igor\Documents\Code\microchip\remoteShutter\two.asm	8;"	v	line:8
+Target	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	25;"	v	line:25
+Value	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	24;"	v	line:24
+endif	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	16;"	l	line:16
+main	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.asm	30;"	l	line:30
+movlf	C:\Users\Igor\Documents\Code\microchip\remoteShutter\shutter.inc	32;"	m	line:32
+mysleep	C:\Users\Igor\Documents\Code\microchip\remoteShutter\two.asm	26;"	l	line:26
+mysleep2	C:\Users\Igor\Documents\Code\microchip\remoteShutter\two.asm	23;"	l	line:23

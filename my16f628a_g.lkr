@@ -1,0 +1,10 @@
+INCLUDE 16f628a_g.lkr
+
+SECTION NAME=.udata     RAM=gpr0 // udata
+SECTION NAME=.udata_ovr RAM=gpr0 // udata_ovr
+
+
+#IFDEF _CRUNTIME
+#ELSE
+	CODEPAGE NAME=.cinit START=0xFFFFFF8 END=0xFFFFFFF // useless "retlw 0"s go here
+#FI

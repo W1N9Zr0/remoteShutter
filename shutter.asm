@@ -14,19 +14,33 @@ Fosc equ 8 * 1000 * 1000
 
 	#include shutter.inc
 
+LoadTime macro DST, XX, YY, ZZ
+	movlw ToBD(ZZ)
+	movwf DST
+	movlw ToBD(YY)
+	movwf DST+1
+	movlw ToBD(XX)
+	movwf DST+2
+	endm
+
 main
 	PICINIT
 
 	MYINIT
 	movlw 1
 	movwf quicke
+	movlw 4
+	movwf quickt
+	movlw 4
+	movwf quickr
 
+	LoadTime exposure, 0, 0, 10
+	LoadTime timer, 0, 1, 0
+	movlw ToBD(1)
+	movwf repeat
 	movlw 0
-	movwf exposure
-	movlw 0
-	movwf exposure+1
-	movlw 0
-	movwf exposure+2
+	movwf repeat+1
+	
 
 loop
 

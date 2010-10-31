@@ -39,6 +39,7 @@ endif
 StateSaveMemory	udata_shr
 SAVE_W res 1
 SAVE_STATUS res 1
+Temp res 1
 
 
 SaveState macro
@@ -58,3 +59,15 @@ RestoreState macro
 	endm
 
 
+TableLookup macro
+	local TABLE
+	movwf Temp
+	movlw high(TABLE)
+	movwf PCLATH
+	movfw Temp
+	addlw low(TABLE)
+	skpnc
+	incf PCLATH, f
+	movwf PCL
+TABLE
+	endm

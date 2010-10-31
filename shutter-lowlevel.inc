@@ -42,8 +42,6 @@ timerw res 3
 
 Loopv1 res 1
 
-Temp res 1
-
 
 	code
 

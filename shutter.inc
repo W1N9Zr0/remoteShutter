@@ -64,33 +64,33 @@ DecR
 
 DoThinking
 	btfsc Buttons, BTN_UP
-		call IncE
+		call IncT
 	btfsc Buttons, BTN_DOWN
-		call DecE
+		call DecT
 
-	movfw quicke
+	movfw quickt
 	call TimeTable0
-	movwf exposure+0
+	movwf timer+0
 	
-	movfw quicke
+	movfw quickt
 	call TimeTable1
-	movwf exposure+1
+	movwf timer+1
 
-	movfw quicke
+	movfw quickt
 	call TimeTable2
-	movwf exposure+2
+	movwf timer+2
 	
-	movlw exposure
+	movlw timer
 	call DisplayTime
 	
 	return
 
-CheckLeadingZero macro X
-	movfw Display+X
+CheckLeadingZero macro Digit
+	movf (Display+Digit),w
 	xorlw 0xDD
 	btfss STATUS, Z
 		return
-	clrf Display+X
+	clrf (Display+Digit)
 	endm
 
 DisplayTime
@@ -116,21 +116,21 @@ DisplayTime
 	return
 
 TimeTable0
-	addwf PCL, f
+	TableLookup
 	dt ToBD( 5), ToBD(10), ToBD(25), ToBD(50)
 	dt ToBD( 0), ToBD( 0), ToBD( 0), ToBD( 0)
 	dt ToBD( 0), ToBD( 0), ToBD( 0), ToBD( 0)
 	dt ToBD( 0), ToBD( 0), ToBD( 0), ToBD( 0)
 	dt ToBD( 0), ToBD( 0)
 TimeTable1
-	addwf PCL, f
+	TableLookup
 	dt ToBD( 0), ToBD( 0), ToBD( 0), ToBD( 0)
 	dt ToBD( 1), ToBD( 2), ToBD( 4), ToBD( 8)
 	dt ToBD(16), ToBD(32), ToBD(64), ToBD(28)
 	dt ToBD(56), ToBD(12), ToBD(24), ToBD(48)
 	dt ToBD(96), ToBD(92)
 TimeTable2
-	addwf PCL, f
+	TableLookup
 	dt ToBD( 0), ToBD( 0), ToBD( 0), ToBD( 0)
 	dt ToBD( 0), ToBD( 0), ToBD( 0), ToBD( 0)
 	dt ToBD( 0), ToBD( 0), ToBD( 0), ToBD( 1)

@@ -5,9 +5,8 @@
 
 	code
 
-	
 ToSevenSegDec
-	addwf PCL, f
+	TableLookup
 	retlw 0xDD	;0
 	retlw 0x05	;1
 	retlw 0xB9	;2
@@ -23,7 +22,7 @@ ToSevenSegDec
 	end
 	
 ToSevenSegLET
-	addwf PCL, f
+	TableLookup
 	retlw 0xF5	;A
 	retlw 0x7C	;B
 	retlw 0xD8	;C

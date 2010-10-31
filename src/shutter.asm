@@ -16,10 +16,11 @@ Fosc equ 8 * 1000 * 1000
 
 main
 	PICINIT
-	
+
 	MYINIT
-	movlw 0
+	movlw 1
 	movwf quicke
+
 	movlw 0
 	movwf exposure
 	movlw 0
@@ -42,8 +43,6 @@ loop
 	
 
 	goto loop
-
-
 
 	end
 	

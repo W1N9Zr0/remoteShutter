@@ -19,29 +19,48 @@ StateHold equ 0x0a
 StateAFine equ 0x10
 
 
-IncE
-	incf quicke, f
-	movfw quicke
-	xorlw 18
+incFwrap macro F, max, min
+	incf F, f
+	movfw F
+	xorlw max+1
 	
 	btfss STATUS, Z
 		return
 	
-	movlw 0
-	movwf quicke
+	movlw min
+	movwf F
 	
 	return
+	endm
+	
+decFwrap macro F, min, max
+	decf F, f
+	movfw F
+	xorlw min-1
+	
+	btfss STATUS, Z
+		return
+	movlw max
+	movwf F
+	
+	return
+	endm
 
+IncE
+	incFwrap quicke, 17, 0
 DecE
-	decf quicke, f
-	movfw quicke
-	xorlw -1
-	
-	btfss STATUS, Z
-		return
-	movlw 17
-	movwf quicke
-	return
+	decFwrap quicke, 0, 17
+
+IncT
+	incFwrap quickt, 17, 3
+DecT
+	decFwrap quickt, 3, 17
+
+IncR
+	incFwrap quickr, 14, 4
+DecR
+	decFwrap quickr, 4, 14
+
 
 DoThinking
 	btfsc Buttons, BTN_UP
@@ -66,6 +85,14 @@ DoThinking
 	
 	return
 
+CheckLeadingZero macro X
+	movfw Display+X
+	xorlw 0xDD
+	btfss STATUS, Z
+		return
+	clrf Display+X
+	endm
+
 DisplayTime
 	movwf FSR
 	
@@ -81,28 +108,32 @@ DisplayTime
 	movf Temp, w
 	btfss STATUS, Z
 		bsf Display+2, 1
+		
+	CheckLeadingZero 3
+	CheckLeadingZero 2
+	CheckLeadingZero 1
 	
 	return
 
 TimeTable0
 	addwf PCL, f
-	dt ToBD(5), ToBD(10), ToBD(25), ToBD(50)
-	dt ToBD(0), ToBD( 0), ToBD( 0), ToBD( 0)
-	dt ToBD(0), ToBD( 0), ToBD( 0), ToBD( 0)
-	dt ToBD(0), ToBD( 0), ToBD( 0), ToBD( 0)
-	dt ToBD(0), ToBD( 0)
+	dt ToBD( 5), ToBD(10), ToBD(25), ToBD(50)
+	dt ToBD( 0), ToBD( 0), ToBD( 0), ToBD( 0)
+	dt ToBD( 0), ToBD( 0), ToBD( 0), ToBD( 0)
+	dt ToBD( 0), ToBD( 0), ToBD( 0), ToBD( 0)
+	dt ToBD( 0), ToBD( 0)
 TimeTable1
 	addwf PCL, f
-	dt ToBD(100), ToBD(100), ToBD(100), ToBD(100)
-	dt ToBD(101), ToBD(102), ToBD(104), ToBD(108)
-	dt ToBD( 16), ToBD( 32), ToBD( 64), ToBD( 28)
-	dt ToBD( 56), ToBD( 12), ToBD( 24), ToBD( 48)
-	dt ToBD( 96), ToBD( 92)
+	dt ToBD( 0), ToBD( 0), ToBD( 0), ToBD( 0)
+	dt ToBD( 1), ToBD( 2), ToBD( 4), ToBD( 8)
+	dt ToBD(16), ToBD(32), ToBD(64), ToBD(28)
+	dt ToBD(56), ToBD(12), ToBD(24), ToBD(48)
+	dt ToBD(96), ToBD(92)
 TimeTable2
 	addwf PCL, f
-	dt     0xaa ,     0xaa ,    0xaa ,     0xaa
-	dt     0xaa ,     0xaa ,    0xaa ,     0xaa
-	dt     0xaa ,     0xaa ,    0xaa , ToBD(101)
-	dt ToBD(102), ToBD(105), ToBD(10), ToBD( 20)
-	dt ToBD( 40), ToBD( 81)
+	dt ToBD( 0), ToBD( 0), ToBD( 0), ToBD( 0)
+	dt ToBD( 0), ToBD( 0), ToBD( 0), ToBD( 0)
+	dt ToBD( 0), ToBD( 0), ToBD( 0), ToBD( 1)
+	dt ToBD( 2), ToBD( 5), ToBD(10), ToBD(20)
+	dt ToBD(40), ToBD(81)
 	

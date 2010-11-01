@@ -10,9 +10,10 @@ Fosc equ 8 * 1000 * 1000
 	; Code Protect off, WatchDogTimer off, BrownOutDetection off, 
 	; PowerUpTimer on, Internal Oscilator, LowVoltageProgram off,
 	; MCLR off
-	__idlocs 0x4321
+	__idlocs 0x567a
 
 	#include shutter.inc
+
 
 LoadTime macro DST, XX, YY, ZZ
 	movlw ToBD(ZZ)
@@ -27,12 +28,16 @@ main
 	PICINIT
 
 	MYINIT
-	movlw 1
+	
+	movlw 0
+	movwf menustate
+	movlw 0
 	movwf quicke
 	movlw 4
 	movwf quickt
 	movlw 4
 	movwf quickr
+
 
 	LoadTime exposure, 0, 0, 10
 	LoadTime timer, 0, 1, 0
@@ -40,7 +45,6 @@ main
 	movwf repeat
 	movlw 0
 	movwf repeat+1
-	
 
 loop
 

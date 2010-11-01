@@ -1,5 +1,6 @@
 	#include shutter-lowlevel.inc
 
+
 StateMask equ 0x0f	
 
 StateManual equ 0x01
@@ -18,6 +19,10 @@ StateHold equ 0x0a
 
 StateAFine equ 0x10
 
+	extern BD2Inc
+	extern BD2Dec
+	
+	#include states.inc
 
 incFwrap macro F, max, min
 	incf F, f
@@ -62,26 +67,57 @@ DecR
 	decFwrap quickr, 4, 14
 
 
-DoThinking
-	btfsc Buttons, BTN_UP
-		call IncT
-	btfsc Buttons, BTN_DOWN
-		call DecT
 
-	movfw quickt
-	call TimeTable0
-	movwf timer+0
+DisplayText macro TEXT, LEN
+	variable I
+	variable J
+I = 0
+	while (I < LEN) 
+J = +3 - I
+		call TEXT+I
+		call ToSevenSegLET
+		movwf Display + J
+I++
+	endw
 	
-	movfw quickt
-	call TimeTable1
-	movwf timer+1
+	endm 
 
-	movfw quickt
-	call TimeTable2
-	movwf timer+2
+FAIL
+	dt 'F','A','I','L'
+
+lolfail
+	DisplayText FAIL, 4
+	return
+
+DoThinking
+	
+	movfw Buttons
+	xorwf OldButtons, f
+	btfss STATUS, Z
+		goto PassButton
+	
+	decfsz HoldDelay, f
+		goto NoButtons
+		
+	movlw 15
+	movwf HoldDelay
+	goto NoReDelay
+PassButton
+	movlw 80
+	movwf HoldDelay
+NoReDelay
+
+	call ButtonMap
+
+NoButtons
+
+	movfw Buttons
+	movwf OldButtons
+
 	
 	movlw timer
 	call DisplayTime
+	
 	
 	return
 
@@ -92,6 +128,7 @@ CheckLeadingZero macro Digit
 		return
 	clrf (Display+Digit)
 	endm
+
 
 DisplayTime
 	movwf FSR

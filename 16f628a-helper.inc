@@ -18,7 +18,7 @@ PICINIT	macro
 			movlw	PORTBInputs
 			movwf	TRISB
 			
-			bcf PCON, OSCF
+			;bcf PCON, OSCF ; 48khz osc
 	
 	
 		bcf		STATUS, RP0

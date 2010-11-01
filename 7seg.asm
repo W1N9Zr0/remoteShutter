@@ -2,6 +2,7 @@
 	#include 16f628a-helper.inc
 	radix dec
 	global ToSevenSegDec
+	global ToSevenSegLET
 
 	code
 
@@ -19,9 +20,9 @@ ToSevenSegDec
 	retlw 0xED	;9
 	retlw 0x00  ;blank
 
-	end
 	
 ToSevenSegLET
+	addlw -'A'
 	TableLookup
 	retlw 0xF5	;A
 	retlw 0x7C	;B
@@ -49,3 +50,5 @@ ToSevenSegLET
 	retlw 0x55	;X
 	retlw 0x6D	;Y
 	retlw 0x99	;Z
+	
+	end

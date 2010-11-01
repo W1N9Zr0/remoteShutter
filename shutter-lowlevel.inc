@@ -3,6 +3,7 @@
 	radix dec			; Default to Decimal numbers
 
 	extern ToSevenSegDec
+	extern ToSevenSegLET
 
 
 LEDOFFNEG equ b'00001111'
@@ -19,8 +20,15 @@ PORTBInputs	equ	b'00000000'
 
 	udata
 Buttons res 1
-BTN_UP equ 0
-BTN_DOWN equ 1
+OldButtons res 1
+HoldDelay res 1
+
+
+BTN_DOWN equ 0
+BTN_UP equ 1
+BTN_CANCEL equ 2
+BTN_OK equ 3
+
 
 DECIMALSEG equ 2
 
@@ -45,7 +53,7 @@ Loopv1 res 1
 
 	code
 
-RST	code     0x0000
+RST	code     0x0000	
 	goto    main
 
 
@@ -55,7 +63,7 @@ MYINIT macro
 		bsf STATUS, RP0
 			bcf OPTION_REG, 7 ; Port B pullups
 			bcf OPTION_REG, T0CS
-		bcf STATUS, RP0 ; 4mhz osc
+		bcf STATUS, RP0
 		errorlevel +302
 
 		movlw 1

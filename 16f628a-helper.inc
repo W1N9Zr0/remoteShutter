@@ -26,20 +26,11 @@ PICINIT	macro
 	endm
 
 
-
-
-	ifdef INTERRUPTS
-INT	code	0x0004	; Interrupt Vector
-	SaveState
-	call	interupt
-	RestoreState
-	retfie			; End Interrupt Vector
-endif
-
 StateSaveMemory	udata_shr
 SAVE_W res 1
 SAVE_STATUS res 1
 Temp res 1
+
 
 
 SaveState macro
@@ -57,6 +48,7 @@ RestoreState macro
 		swapf	SAVE_W, F
 		swapf	SAVE_W, W
 	endm
+
 
 
 TableLookup macro

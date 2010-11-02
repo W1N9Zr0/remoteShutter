@@ -14,7 +14,6 @@ State0
 		
 	btfss Buttons, BTN_OK
 		bsf menustate, 0
-	
 	movfw quickt
 	call TimeTable0
 	movwf timer+0
@@ -42,5 +41,23 @@ State1
 Skip2	
 	btfss Buttons, BTN_OK
 		bcf menustate, 0
+	
+	
+		
+	btfsc Buttons, BTN_CANCEL
+		goto NoCancel
+		
+	btfss T2CON, TMR2ON
+		goto TimerIsOff
+	
+	clrf TMR2
+	bcf T2CON, TMR2ON
+
+	goto NoCancel
+TimerIsOff
+	bsf T2CON, TMR2ON
+		
+NoCancel
+	
 	
 	return

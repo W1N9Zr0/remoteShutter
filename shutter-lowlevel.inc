@@ -32,6 +32,8 @@ BTN_OK equ 3
 
 DECIMALSEG equ 2
 
+TimeCounter5ms res 1
+
 Display res 2
 Display2 res 2
 
@@ -56,6 +58,13 @@ Loopv1 res 1
 RST	code     0x0000	
 	goto    main
 
+INT	code	0x0004	; Interrupt Vector
+	SaveState
+	call	interupt
+	RestoreState
+	retfie			; End Interrupt Vector
+
+
 
 
 MYINIT macro
@@ -63,11 +72,24 @@ MYINIT macro
 		bsf STATUS, RP0
 			bcf OPTION_REG, 7 ; Port B pullups
 			bcf OPTION_REG, T0CS
+			
+			bsf PIE1, TMR2IE ; TIMER2 interrupt
+			movlw 250
+			movwf PR2 ; TIMER2 period
 		bcf STATUS, RP0
 		errorlevel +302
 
 		movlw 1
 		movwf Loopv1
+		
+		;timer2
+		clrf T2CON
+		clrf TMR2
+		movlw ((15-1) << 3) | 3
+		movwf T2CON
+		
+		bsf INTCON, GIE ; interrupts
+		bsf INTCON, PEIE; peripheral interrupts
 
 	endm
 

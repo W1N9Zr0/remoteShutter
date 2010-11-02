@@ -24,6 +24,20 @@ LoadTime macro DST, XX, YY, ZZ
 	movwf DST+2
 	endm
 
+
+interupt
+	decfsz TimeCounter5ms, f
+		goto IncrTime
+	goto DoneInter
+IncrTime
+	bsf TimeCounter5ms, 1
+	movlw exposure
+	call BD2Dec
+	
+DoneInter
+	bcf PIR1, TMR2IF
+	return
+
 main
 	PICINIT
 

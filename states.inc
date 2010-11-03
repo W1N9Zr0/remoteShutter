@@ -8,33 +8,33 @@ ButtonMap
 State0
 	
 	btfss Buttons, BTN_UP
-		call IncT
+		call IncE
 	btfss Buttons, BTN_DOWN
-		call DecT
+		call DecE
 		
 	btfss Buttons, BTN_OK
 		bsf menustate, 0
-	movfw quickt
+	movfw quicke
 	call TimeTable0
-	movwf timer+0
+	movwf exposure+0
 	
-	movfw quickt
+	movfw quicke
 	call TimeTable1
-	movwf timer+1
+	movwf exposure+1
 
-	movfw quickt
+	movfw quicke
 	call TimeTable2
-	movwf timer+2
+	movwf exposure+2
 	
 	return
 
 
 State1
-	movlw timer+1
+	movlw exposure+1
 	btfss Buttons, BTN_UP
 		call BD2Inc
 	
-	movlw timer+1
+	movlw exposure+1
 	btfss Buttons, BTN_DOWN
 		call BD2Dec
 	

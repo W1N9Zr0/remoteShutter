@@ -26,11 +26,6 @@ LoadTime macro DST, XX, YY, ZZ
 
 
 interupt
-	decfsz TimeCounter5ms, f
-		goto IncrTime
-	goto DoneInter
-IncrTime
-	bsf TimeCounter5ms, 1
 	movlw exposure
 	call BD2Dec
 	

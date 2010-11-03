@@ -85,7 +85,7 @@ MYINIT macro
 		;timer2
 		clrf T2CON
 		clrf TMR2
-		movlw ((15-1) << 3) | 3
+		movlw ((10-1) << 3) | 1
 		movwf T2CON
 		
 		bsf INTCON, GIE ; interrupts

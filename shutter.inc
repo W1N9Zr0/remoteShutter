@@ -115,7 +115,7 @@ NoButtons
 	movwf OldButtons
 
 	
-	movlw timer
+	movlw exposure
 	call DisplayTime
 	
 	

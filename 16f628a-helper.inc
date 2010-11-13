@@ -63,3 +63,14 @@ TableLookup macro
 	movwf PCL
 TABLE
 	endm
+	
+	
+	
+Copy3 macro Dst, Src
+		movfw Src
+		movwf Dst
+		movfw Src+1
+		movwf Dst+1
+		movfw Src+2
+		movwf Dst+2
+	endm

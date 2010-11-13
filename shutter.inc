@@ -21,6 +21,9 @@ StateAFine equ 0x10
 
 	extern BD2Inc
 	extern BD2Dec
+	extern BD3Inc
+	extern BD3Dec
+	extern BD3Test
 	
 	#include states.inc
 
@@ -114,8 +117,7 @@ NoButtons
 	movfw Buttons
 	movwf OldButtons
 
-	
-	movlw exposure
+	movfw DisplayPointer
 	call DisplayTime
 	
 	
@@ -133,17 +135,22 @@ CheckLeadingZero macro Digit
 DisplayTime
 	movwf FSR
 	
+	incf FSR,f
+	incf FSR,f
 	movfw INDF
+	decf FSR, f
+	iorwf INDF, w
+	
 	movwf Temp
 	btfsc STATUS, Z
-		incf FSR, f
+		decf FSR, f
 	
 	BD7Seg Display, INDF
 	incf FSR, f
 	BD7Seg Display2, INDF
 	
 	movf Temp, w
-	btfss STATUS, Z
+	btfsc STATUS, Z
 		bsf Display+2, 1
 		
 	CheckLeadingZero 3

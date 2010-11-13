@@ -38,11 +38,16 @@ Display res 2
 Display2 res 2
 
 menustate res 1
+TimerMode res 1
+ShutterState res 1
+SHUTTER_HALFWAY equ 6
+SHUTTER_CLICK equ 7
 
 quicke res 1
 quickt res 1
 quickr res 1
 
+DisplayPointer res 1
 exposure res 3
 timer res 3
 repeat res 3
@@ -55,7 +60,7 @@ Loopv1 res 1
 
 	code
 
-RST	code     0x0000	
+RST	code     0x0000
 	goto    main
 
 INT	code	0x0004	; Interrupt Vector
@@ -90,7 +95,31 @@ MYINIT macro
 		
 		bsf INTCON, GIE ; interrupts
 		bsf INTCON, PEIE; peripheral interrupts
+		
+		clrf ShutterState
 
+
+	
+		clrf menustate
+		bsf menustate, 0
+		clrf TimerMode
+		
+		movlw 0
+		movwf quicke
+		movlw 4
+		movwf quickt
+		movlw 4
+		movwf quickr
+		
+		movlw timer
+		movwf DisplayPointer
+	
+		LoadTime exposure, 0, 1, 0
+		LoadTime timer, 0, 2, 0
+		movlw ToBD(1)
+		movwf repeat
+		movlw 0
+		movwf repeat+1
 	endm
 
 
@@ -98,7 +127,9 @@ MYINIT macro
 ReadButtons
 	clrf PORTA
 	movlw LEDOFFNEG
+	iorwf ShutterState, w
 	movwf PORTB	
+	
 	errorlevel -302
 	bsf STATUS, RP0
 		movlw b'00001111'
@@ -107,9 +138,11 @@ ReadButtons
 	bcf STATUS, RP0
 	errorlevel +302
 
-	clrf PORTB
+	movfw ShutterState
+	movwf PORTB
 
 	movfw PORTB
+	andlw 0x0f
 	movwf Buttons
 
 	errorlevel -302
@@ -121,6 +154,7 @@ ReadButtons
 	errorlevel +302
 	
 	movlw LEDOFFNEG
+	iorwf ShutterState, w
 	movwf PORTB
 	
 	return
@@ -128,6 +162,7 @@ ReadButtons
 
 showdigit macro value, digit
 		movlw LEDOFFNEG
+		iorwf ShutterState, w
 		movwf PORTB
 		
 		movfw value
@@ -136,6 +171,7 @@ showdigit macro value, digit
 		;movfw value
 		andlw b'00110000'
 		iorlw ((~(1 << digit)) & b'00001111')
+		iorwf ShutterState, w
 		movwf PORTB
 		call DigitDisplayDelay
 		
@@ -184,3 +220,15 @@ BD7Seg macro DSTF, BDF
 	endm
 	
 	
+	
+
+
+LoadTime macro DST, XX, YY, ZZ
+	movlw ToBD(ZZ)
+	movwf DST
+	movlw ToBD(YY)
+	movwf DST+1
+	movlw ToBD(XX)
+	movwf DST+2
+	endm
+

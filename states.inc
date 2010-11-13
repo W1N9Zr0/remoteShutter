@@ -8,33 +8,35 @@ ButtonMap
 State0
 	
 	btfss Buttons, BTN_UP
-		call IncE
+		call IncT
 	btfss Buttons, BTN_DOWN
-		call DecE
+		call DecT
 		
 	btfss Buttons, BTN_OK
 		bsf menustate, 0
-	movfw quicke
+	movfw quickt
 	call TimeTable0
-	movwf exposure+0
+	movwf timer+0
 	
-	movfw quicke
+	movfw quickt
 	call TimeTable1
-	movwf exposure+1
+	movwf timer+1
 
-	movfw quicke
+	movfw quickt
 	call TimeTable2
-	movwf exposure+2
+	movwf timer+2
+	
+	
 	
 	return
 
 
 State1
-	movlw exposure+1
+	movlw timer
 	btfss Buttons, BTN_UP
 		call BD2Inc
 	
-	movlw exposure+1
+	movlw timer
 	btfss Buttons, BTN_DOWN
 		call BD2Dec
 	
@@ -52,11 +54,22 @@ Skip2
 	
 	clrf TMR2
 	bcf T2CON, TMR2ON
+	
+	movlw timer
+	movwf DisplayPointer
 
 	goto NoCancel
 TimerIsOff
+	
+	Copy3 exposurew, exposure
+	Copy3 timerw, timer
+	
+	movlw timerw
+	movwf DisplayPointer
+	
 	bsf T2CON, TMR2ON
-		
+	
+	
 NoCancel
 	
 	

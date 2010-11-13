@@ -19,43 +19,43 @@ PORTBInputs	equ	b'00000000'
 ;EERepeat  dw 0, 0, 0
 
 	udata
-Buttons res 1
-OldButtons res 1
-HoldDelay res 1
+MenuState res 1
 
 
-BTN_DOWN equ 0
-BTN_UP equ 1
-BTN_CANCEL equ 2
-BTN_OK equ 3
-
-
-DECIMALSEG equ 2
-
-TimeCounter5ms res 1
-
-Display res 2
-Display2 res 2
-
-menustate res 1
 TimerMode res 1
 ShutterState res 1
 SHUTTER_HALFWAY equ 6
 SHUTTER_CLICK equ 7
 
+Buttons res 1
+BTN_DOWN equ 0
+BTN_UP equ 1
+BTN_CANCEL equ 2
+BTN_OK equ 3
+OldButtons res 1
+
+HoldDelay res 1
+
+
+Display res 2
+Display2 res 2
+DECIMALSEG equ 2
+DisplayPointer res 1
+
 quicke res 1
 quickt res 1
 quickr res 1
 
-DisplayPointer res 1
-exposure res 3
-timer res 3
-repeat res 3
+exposure res 4
+timer res 4
+repeat res 4
 
-exposurew res 3
-timerw res 3
+exposurew res 4
+timerw res 4
 
 Loopv1 res 1
+
+DisplayLoop res 1
 
 
 	code
@@ -100,8 +100,8 @@ MYINIT macro
 
 
 	
-		clrf menustate
-		bsf menustate, 0
+		clrf MenuState
+		bsf MenuState, 0
 		clrf TimerMode
 		
 		movlw 0
@@ -116,10 +116,14 @@ MYINIT macro
 	
 		LoadTime exposure, 0, 1, 0
 		LoadTime timer, 0, 2, 0
+		
 		movlw ToBD(1)
 		movwf repeat
 		movlw 0
 		movwf repeat+1
+		clrf repeat+2
+		
+		clrf DisplayLoop
 	endm
 
 
@@ -173,17 +177,10 @@ showdigit macro value, digit
 		iorlw ((~(1 << digit)) & b'00001111')
 		iorwf ShutterState, w
 		movwf PORTB
-		call DigitDisplayDelay
+		;call DigitDisplayDelay
 		
 	endm
 	
-UpdateDisplay
-	showdigit Display+0 , 0
-	showdigit Display+1 , 1
-	showdigit Display+2 , 2
-	showdigit Display+3 , 3
-	return
-
 
 FrameDelay
 	decfsz Loopv1, f
@@ -194,13 +191,6 @@ FrameDelay
 	bsf STATUS, Z
 	return
 
-DigitDisplayDelay
-	nop
-	nop
-	nop
-	nop
-	nop
-	return;
 	
 #define ToBD(X) (X / 10 << 4) | (X % 10)
 
@@ -232,3 +222,38 @@ LoadTime macro DST, XX, YY, ZZ
 	movwf DST+2
 	endm
 
+
+
+DisplayRaw macro Text
+	variable I
+I = 0
+	while (I < 4)
+J = 3 - I
+		call Text+I
+		movwf Display + J
+I++
+	endw
+	endm
+
+DisplayText macro TEXT, LEN
+	variable I
+	variable J
+I = 0
+	while (I < LEN) 
+J = +3 - I
+		call TEXT+I
+		call ToSevenSegLET
+		movwf Display + J
+I++
+	endw
+	if ( LEN < 4) 
+I = LEN
+		clrw
+		while ( I < 4 )
+J = +3 - I
+			movwf Display + J
+I++
+		endw	
+	endif
+
+	endm 

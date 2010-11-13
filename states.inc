@@ -1,76 +1,122 @@
 
+
+STATE_MANUAL equ 0
+STATE_AUTO equ 1
+STATE_EXP equ 2
+STATE_TIME equ 3
+STATE_REP equ 4
+STATE_CLICK equ 5
+STATE_HOLD equ 6
+STATE_ADJ_E equ 7
+STATE_ADJ_T equ 8
+STATE_ADJ_R equ 9
+STATE_RUNNING equ 10
+
+STATEFLAG_FINE_ADJ equ 7
+STATEMASK equ 0xf
+
+#include adj_handler.inc
+
+
+TEXT_MAN 
+	dt 0xd5, 0x85, 0, 0
+TEXT_AUTO
+	dt 0xf5, 0, 0, 0
+TEXT_EXP
+	dt 0xf8, 0, 0, 0
+TEXT_TIME
+	dt 0x85, 0x80, 0, 0
+TEXT_REP
+	dt 0x30, 0, 0, 0
+
 ButtonMap
-	movfw menustate
+	movfw MenuState
+	andlw STATEMASK
 	TableLookup
-	goto State0
-	goto State1
-	
-State0
-	
-	btfss Buttons, BTN_UP
-		call IncT
-	btfss Buttons, BTN_DOWN
-		call DecT
-		
-	btfss Buttons, BTN_OK
-		bsf menustate, 0
-	movfw quickt
-	call TimeTable0
-	movwf timer+0
-	
-	movfw quickt
-	call TimeTable1
-	movwf timer+1
+	goto STATE_MANUAL_HANDLER
+	goto STATE_AUTO_HANDLER
+	goto STATE_EXP_HANDLER
+	goto STATE_TIME_HANDLER
+	goto STATE_REP_HANDLER
+	goto STATE_CLICK_HANDLER
+	goto STATE_HOLD_HANDLER
+	goto STATE_ADJ_E_HANDLER
+	goto STATE_ADJ_T_HANDLER
+	goto STATE_ADJ_R_HANDLER
+	goto STATE_RUNNING_HANDLER
 
-	movfw quickt
-	call TimeTable2
-	movwf timer+2
+STATE_MANUAL_HANDLER
+	clrf DisplayPointer
+	DisplayRaw TEXT_MAN
 	
+	IF_BUTTON_THEN_STATE BTN_OK, STATE_CLICK
+	IF_BUTTON_THEN_STATE BTN_CANCEL, STATE_HOLD
+	IF_BUTTON_THEN_STATE BTN_UP, STATE_REP
+	IF_BUTTON_THEN_STATE BTN_DOWN, STATE_AUTO
+	return
 	
+STATE_AUTO_HANDLER
+	clrf DisplayPointer
+	DisplayRaw TEXT_AUTO
+	
+	IF_BUTTON_THEN_STATE BTN_UP, STATE_MANUAL
+	IF_BUTTON_THEN_STATE BTN_DOWN, STATE_EXP
+	IF_BUTTON_THEN_STATE BTN_OK, STATE_RUNNING
+	return
+	
+STATE_EXP_HANDLER
+	clrf DisplayPointer
+	DisplayRaw TEXT_EXP
+	
+	IF_BUTTON_THEN_STATE BTN_UP, STATE_AUTO
+	IF_BUTTON_THEN_STATE BTN_DOWN, STATE_TIME
+	IF_BUTTON_THEN_STATE BTN_OK, STATE_ADJ_E
+	return
+	
+STATE_TIME_HANDLER
+	clrf DisplayPointer
+	DisplayRaw TEXT_TIME
+	
+	IF_BUTTON_THEN_STATE BTN_UP, STATE_EXP
+	IF_BUTTON_THEN_STATE BTN_DOWN, STATE_REP
+	IF_BUTTON_THEN_STATE BTN_OK, STATE_ADJ_T
+	return
+
+STATE_REP_HANDLER
+	clrf DisplayPointer
+	DisplayRaw TEXT_REP
+	
+	IF_BUTTON_THEN_STATE BTN_UP, STATE_TIME
+	IF_BUTTON_THEN_STATE BTN_DOWN, STATE_MANUAL
+	IF_BUTTON_THEN_STATE BTN_OK, STATE_ADJ_R
+	return
+
+STATE_CLICK_HANDLER
+	movlw STATE_MANUAL
+	btfsc Buttons, BTN_OK
+		movwf MenuState
 	
 	return
 
-
-State1
-	movlw timer
-	btfss Buttons, BTN_UP
-		call BD2Inc
-	
-	movlw timer
-	btfss Buttons, BTN_DOWN
-		call BD2Dec
-	
-Skip2	
-	btfss Buttons, BTN_OK
-		bcf menustate, 0
-	
-	
-		
-	btfsc Buttons, BTN_CANCEL
-		goto NoCancel
-		
-	btfss T2CON, TMR2ON
-		goto TimerIsOff
-	
-	clrf TMR2
-	bcf T2CON, TMR2ON
-	
-	movlw timer
-	movwf DisplayPointer
-
-	goto NoCancel
-TimerIsOff
-	
-	Copy3 exposurew, exposure
-	Copy3 timerw, timer
-	
-	movlw timerw
-	movwf DisplayPointer
-	
-	bsf T2CON, TMR2ON
-	
-	
-NoCancel
-	
-	
+STATE_HOLD_HANDLER
+	IF_BUTTON_THEN_STATE BTN_CANCEL, STATE_MANUAL
 	return
+
+STATE_ADJ_T_HANDLER
+	ADJ_HANDLER IncT, DecT, quickt, timer, STATE_TIME
+	return
+
+STATE_ADJ_E_HANDLER
+	ADJ_HANDLER IncE, DecE, quicke, exposure, STATE_EXP
+	return
+
+STATE_ADJ_R_HANDLER
+	ADJ_HANDLER IncR, DecR, quickr, repeat, STATE_REP
+	return
+
+
+STATE_RUNNING_HANDLER
+	
+	IF_BUTTON_THEN_STATE BTN_CANCEL, STATE_AUTO
+	return
+

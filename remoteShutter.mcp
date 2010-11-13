@@ -33,6 +33,7 @@ file_005=.
 file_006=.
 file_007=.
 file_008=.
+file_009=.
 [GENERATED_FILES]
 file_000=no
 file_001=no
@@ -43,6 +44,7 @@ file_005=no
 file_006=no
 file_007=no
 file_008=no
+file_009=no
 [OTHER_FILES]
 file_000=no
 file_001=no
@@ -53,6 +55,7 @@ file_005=no
 file_006=no
 file_007=no
 file_008=no
+file_009=no
 [FILE_INFO]
 file_000=shutter.asm
 file_001=7seg.asm
@@ -62,7 +65,8 @@ file_004=16f628a-helper.inc
 file_005=shutter-lowlevel.inc
 file_006=bdmath.inc
 file_007=states.inc
-file_008=my16f628a_g.lkr
+file_008=adj_handler.inc
+file_009=my16f628a_g.lkr
 [SUITE_INFO]
 suite_guid={6B3DAA78-59C1-46DD-B6AA-DBDAE4E06484}
 suite_state=

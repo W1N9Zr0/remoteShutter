@@ -84,18 +84,44 @@ loop
 
 	bcf INTCON, GIE
 	call UpdateDisplay
+	
 	bsf INTCON, GIE
 	
-	call ReadButtons
-	
 	call FrameDelay
-	btfss STATUS, Z
-		goto loop
-		
-	call DoThinking
+	btfsc STATUS, Z
+		call DoThinking
 	
-
 	goto loop
 
+UpdateDisplay
+	incf DisplayLoop, f
+	movlw 5
+	xorwf DisplayLoop, w
+	btfsc STATUS, Z
+		clrf DisplayLoop
+
+DoDisplay
+	movfw DisplayLoop
+	TableLookup
+	goto DisplayDigit0
+	goto DisplayDigit1
+	goto DisplayDigit2
+	goto DisplayDigit3
+	goto ReadButtons
+
+DisplayDigit0
+	showdigit Display+0 , 0
+	return;
+DisplayDigit1
+	showdigit Display+1 , 1
+	return;
+DisplayDigit2
+	showdigit Display+2 , 2
+	return;
+DisplayDigit3
+	showdigit Display+3 , 3
+	return;
+	
+	
 	end
 	

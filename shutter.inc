@@ -1,23 +1,7 @@
 	#include shutter-lowlevel.inc
 
-
-StateMask equ 0x0f	
-
-StateManual equ 0x01
-StateAuto equ 0x02
-
-StateE equ 0x03
-StateT equ 0x04
-StateR equ 0x05
-
-StateAE equ 0x06
-StateAT equ 0x07
-StateAR equ 0x08
-
-StateTrigger equ 0x09
-StateHold equ 0x0a
-
-StateAFine equ 0x10
+BUTTON_REPEAT_DELAY equ 32
+BUTTON_HOLD_DELAY equ 200
 
 	extern BD2Inc
 	extern BD2Dec
@@ -71,27 +55,6 @@ DecR
 
 
 
-DisplayText macro TEXT, LEN
-	variable I
-	variable J
-I = 0
-	while (I < LEN) 
-J = +3 - I
-		call TEXT+I
-		call ToSevenSegLET
-		movwf Display + J
-I++
-	endw
-	
-	endm 
-
-FAIL
-	dt 'F','A','I','L'
-
-lolfail
-	DisplayText FAIL, 4
-	return
-
 DoThinking
 	
 	movfw Buttons
@@ -102,11 +65,11 @@ DoThinking
 	decfsz HoldDelay, f
 		goto NoButtons
 		
-	movlw 15
+	movlw BUTTON_REPEAT_DELAY
 	movwf HoldDelay
 	goto NoReDelay
 PassButton
-	movlw 80
+	movlw BUTTON_HOLD_DELAY
 	movwf HoldDelay
 NoReDelay
 
@@ -118,7 +81,8 @@ NoButtons
 	movwf OldButtons
 
 	movfw DisplayPointer
-	call DisplayTime
+	btfss STATUS, Z
+		call DisplayTime
 	
 	
 	return

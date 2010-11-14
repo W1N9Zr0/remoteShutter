@@ -15,7 +15,7 @@ STATE_RUNNING equ 10
 STATEFLAG_FINE_ADJ equ 7
 STATEMASK equ 0xf
 
-#include adj_handler.inc
+#include state-helper.inc
 
 
 TEXT_MAN 
@@ -45,6 +45,31 @@ ButtonMap
 	goto STATE_ADJ_R_HANDLER
 	goto STATE_RUNNING_HANDLER
 
+
+ManuallyTrigger
+	movlw b'11000000'
+	movwf ShutterState
+	clrf timerw
+	clrf timerw+1
+	clrf timerw+2
+	clrf timerw+3
+	
+	movlw TIMER_COUNTUP
+	movwf TimerMode
+	bsf T2CON, TMR2ON
+	
+	movlw timerw
+	movwf DisplayPointer
+	return
+	
+ManuallyStop
+	bcf T2CON, TMR2ON
+	clrf ShutterState
+	movlw TIMER_COUNTDOWN
+	movwf TimerMode
+	clrf DisplayPointer
+	return
+
 STATE_MANUAL_HANDLER
 	clrf DisplayPointer
 	DisplayRaw TEXT_MAN
@@ -53,6 +78,17 @@ STATE_MANUAL_HANDLER
 	IF_BUTTON_THEN_STATE BTN_CANCEL, STATE_HOLD
 	IF_BUTTON_THEN_STATE BTN_UP, STATE_REP
 	IF_BUTTON_THEN_STATE BTN_DOWN, STATE_AUTO
+	
+	movfw MenuState
+	xorlw STATE_CLICK
+	btfsc STATUS, Z
+		call ManuallyTrigger
+	
+	movfw MenuState
+	xorlw STATE_HOLD
+	btfsc STATUS, Z
+		call ManuallyTrigger
+	
 	return
 	
 STATE_AUTO_HANDLER
@@ -96,10 +132,21 @@ STATE_CLICK_HANDLER
 	btfsc Buttons, BTN_OK
 		movwf MenuState
 	
+	movfw MenuState
+	xorlw STATE_MANUAL
+	btfsc STATUS, Z
+		call ManuallyStop
+	
 	return
 
 STATE_HOLD_HANDLER
 	IF_BUTTON_THEN_STATE BTN_CANCEL, STATE_MANUAL
+		
+	movfw MenuState
+	xorlw STATE_MANUAL
+	btfsc STATUS, Z
+		call ManuallyStop
+	
 	return
 
 STATE_ADJ_T_HANDLER

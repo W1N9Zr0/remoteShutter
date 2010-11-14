@@ -26,7 +26,7 @@ ADJ_HANDLER macro IncFn, DecFn, quick, value, returnState
 		call TimeTable2
 		movwf value+2
 
-		btfss Buttons, BTN_OK
+		btfss Buttons, BTN_CANCEL
 			bsf MenuState, STATEFLAG_FINE_ADJ
 	
 		goto DoneT
@@ -40,14 +40,14 @@ FineT
 		btfss Buttons, BTN_DOWN
 			call BD2Dec
 	
-		btfss Buttons, BTN_OK
+		btfss Buttons, BTN_CANCEL
 			bcf MenuState, STATEFLAG_FINE_ADJ
 		
 	
 DoneT
 
 	movlw returnState
-	btfss Buttons, BTN_CANCEL
+	btfss Buttons, BTN_OK
 		movwf MenuState
 EndT
 	

@@ -84,3 +84,33 @@ Copy3 macro Dst, Src
 		movfw Src+2
 		movwf Dst+2
 	endm
+	
+	
+
+incFwrap macro F, max, min
+	incf F, f
+	movfw F
+	xorlw max+1
+	
+	btfss STATUS, Z
+		return
+	
+	movlw min
+	movwf F
+	
+	return
+	endm
+	
+decFwrap macro F, min, max
+	decf F, f
+	movfw F
+	xorlw min-1
+	
+	btfss STATUS, Z
+		return
+	movlw max
+	movwf F
+	
+	return
+	endm
+	

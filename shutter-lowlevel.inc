@@ -21,7 +21,6 @@ PORTBInputs	equ	b'00000000'
 	udata
 MenuState res 1
 
-
 TimerMode res 1
 ShutterState res 1
 SHUTTER_HALFWAY equ 6
@@ -36,9 +35,9 @@ OldButtons res 1
 
 HoldDelay res 1
 
-
 Display res 2
 Display2 res 2
+
 DECIMALSEG equ 2
 DisplayPointer res 1
 
@@ -97,12 +96,10 @@ MYINIT macro
 		bsf INTCON, PEIE; peripheral interrupts
 		
 		clrf ShutterState
-
-
-	
 		clrf MenuState
-		bsf MenuState, 0
 		clrf TimerMode
+		clrf DisplayPointer
+		clrf DisplayLoop
 		
 		movlw 0
 		movwf quicke
@@ -110,9 +107,6 @@ MYINIT macro
 		movwf quickt
 		movlw 4
 		movwf quickr
-		
-		movlw timer
-		movwf DisplayPointer
 	
 		LoadTime exposure, 0, 1, 0
 		LoadTime timer, 0, 2, 0
@@ -123,7 +117,6 @@ MYINIT macro
 		movwf repeat+1
 		clrf repeat+2
 		
-		clrf DisplayLoop
 	endm
 
 
@@ -164,7 +157,7 @@ ReadButtons
 	return
 
 
-showdigit macro value, digit
+ShowDigit macro value, digit
 		movlw LEDOFFNEG
 		iorwf ShutterState, w
 		movwf PORTB
@@ -223,37 +216,3 @@ LoadTime macro DST, XX, YY, ZZ
 	endm
 
 
-
-DisplayRaw macro Text
-	variable I
-I = 0
-	while (I < 4)
-J = 3 - I
-		call Text+I
-		movwf Display + J
-I++
-	endw
-	endm
-
-DisplayText macro TEXT, LEN
-	variable I
-	variable J
-I = 0
-	while (I < LEN) 
-J = +3 - I
-		call TEXT+I
-		call ToSevenSegLET
-		movwf Display + J
-I++
-	endw
-	if ( LEN < 4) 
-I = LEN
-		clrw
-		while ( I < 4 )
-J = +3 - I
-			movwf Display + J
-I++
-		endw	
-	endif
-
-	endm 

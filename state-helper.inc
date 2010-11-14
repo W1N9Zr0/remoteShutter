@@ -1,11 +1,19 @@
 
-ADJ_HANDLER macro IncFn, DecFn, quick, value, returnState
-	local FineT, DoneT, EndT
+ADJ_TIME_HANDLER macro IncFn, DecFn, quick, value, returnState
+	ADJ_HANDLER IncFn, DecFn, quick, value, returnState, ClockInc, ClockDec
+	endm
+
+ADJ_INT_HANDLER macro IncFn, DecFn, quick, value, returnState
+	ADJ_HANDLER IncFn, DecFn, quick, value, returnState, IntInc, IntDec
+	endm;
+
+ADJ_HANDLER macro IncFn, DecFn, quick, value, returnState, SIncFn, SDecFn
+	local FineT, DoneT, EndT, NoChange
 	
 		movlw value
 		movwf DisplayPointer
 		
-		btfsc MenuState, STATEFLAG_FINE_ADJ
+		btfss MenuState, STATEFLAG_FAST_ADJ
 			goto FineT
 	
 		btfss Buttons, BTN_UP
@@ -13,7 +21,11 @@ ADJ_HANDLER macro IncFn, DecFn, quick, value, returnState
 		btfss Buttons, BTN_DOWN
 			call DecFn
 		
-	
+;		comf Buttons, w
+;		andlw 1<<BTN_UP | 1<<BTN_DOWN
+;		btfsc STATUS, Z
+;			goto NoChange
+			
 		movfw quick
 		call TimeTable0
 		movwf value+0
@@ -26,22 +38,23 @@ ADJ_HANDLER macro IncFn, DecFn, quick, value, returnState
 		call TimeTable2
 		movwf value+2
 
+NoChange
 		btfss Buttons, BTN_CANCEL
-			bsf MenuState, STATEFLAG_FINE_ADJ
+			bcf MenuState, STATEFLAG_FAST_ADJ
 	
 		goto DoneT
 
 FineT
 		movlw value
 		btfss Buttons, BTN_UP
-			call BD2Inc
+			call SIncFn
 		
 		movlw value
 		btfss Buttons, BTN_DOWN
-			call BD2Dec
+			call SDecFn
 	
 		btfss Buttons, BTN_CANCEL
-			bcf MenuState, STATEFLAG_FINE_ADJ
+			bsf MenuState, STATEFLAG_FAST_ADJ
 		
 	
 DoneT

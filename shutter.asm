@@ -10,7 +10,7 @@ Fosc equ 8 * 1000 * 1000
 	; Code Protect off, WatchDogTimer off, BrownOutDetection off, 
 	; PowerUpTimer on, Internal Oscilator, LowVoltageProgram off,
 	; MCLR off
-	__idlocs 0x567a
+	__idlocs 0x567b
 
 	#include shutter.inc
 

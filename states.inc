@@ -12,7 +12,7 @@ STATE_ADJ_T equ 8
 STATE_ADJ_R equ 9
 STATE_RUNNING equ 10
 
-STATEFLAG_FINE_ADJ equ 7
+STATEFLAG_FAST_ADJ equ 7
 STATEMASK equ 0xf
 
 #include state-helper.inc
@@ -63,12 +63,28 @@ ManuallyTrigger
 	return
 	
 ManuallyStop
+AutoStop
 	bcf T2CON, TMR2ON
 	clrf ShutterState
 	movlw TIMER_COUNTDOWN
 	movwf TimerMode
 	clrf DisplayPointer
 	return
+	
+
+	
+AutoStart
+	Copy3 timerw,timer
+	Copy3 exposurew, exposure
+	
+	movlw TIMER_COUNTDOWN
+	movwf TimerMode
+	bsf T2CON, TMR2ON
+	
+	movlw timerw
+	movwf DisplayPointer
+	return
+	
 
 STATE_MANUAL_HANDLER
 	clrf DisplayPointer
@@ -98,6 +114,13 @@ STATE_AUTO_HANDLER
 	IF_BUTTON_THEN_STATE BTN_UP, STATE_MANUAL
 	IF_BUTTON_THEN_STATE BTN_DOWN, STATE_EXP
 	IF_BUTTON_THEN_STATE BTN_OK, STATE_RUNNING
+	
+	
+	movfw MenuState
+	xorlw STATE_RUNNING
+	btfsc STATUS, Z
+		call AutoStart
+		
 	return
 	
 STATE_EXP_HANDLER
@@ -140,7 +163,7 @@ STATE_CLICK_HANDLER
 	return
 
 STATE_HOLD_HANDLER
-	IF_BUTTON_THEN_STATE BTN_CANCEL, STATE_MANUAL
+	IF_BUTTON_THEN_STATE BTN_OK, STATE_MANUAL
 		
 	movfw MenuState
 	xorlw STATE_MANUAL
@@ -150,20 +173,30 @@ STATE_HOLD_HANDLER
 	return
 
 STATE_ADJ_T_HANDLER
-	ADJ_HANDLER IncT, DecT, quickt, timer, STATE_TIME
+	ADJ_TIME_HANDLER IncT, DecT, quickt, timer, STATE_TIME
 	return
 
 STATE_ADJ_E_HANDLER
-	ADJ_HANDLER IncE, DecE, quicke, exposure, STATE_EXP
+	ADJ_TIME_HANDLER IncE, DecE, quicke, exposure, STATE_EXP
 	return
 
 STATE_ADJ_R_HANDLER
-	ADJ_HANDLER IncR, DecR, quickr, repeat, STATE_REP
+	ADJ_INT_HANDLER IncR, DecR, quickr, repeat, STATE_REP
 	return
 
 
 STATE_RUNNING_HANDLER
 	
 	IF_BUTTON_THEN_STATE BTN_CANCEL, STATE_AUTO
+	
+	movlw STATE_AUTO
+	btfss T2CON, TMR2ON
+		movwf MenuState
+	
+	movfw MenuState
+	xorlw STATE_AUTO
+	btfsc STATUS, Z
+		call AutoStop
+	
 	return
 

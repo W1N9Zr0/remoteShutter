@@ -8,6 +8,10 @@ BUTTON_HOLD_DELAY equ 200
 	extern BD3Inc
 	extern BD3Dec
 	extern BD3Test
+	extern ClockInc
+	extern ClockDec
+	extern IntInc
+	extern IntDec
 
 	#include display.inc
 	

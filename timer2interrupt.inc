@@ -55,6 +55,15 @@ ExposureCountdown
 	 	
 		movlw timerw
 		movwf DisplayPointer
+		
+		movlw repeat
+		call IntDec
+		movlw repeat
+		call BD3Test
+		
+		btfsc STATUS, Z
+			bcf T2CON, TMR2ON ; turn myself off
+		
 	goto DoneInterrupt
 	
 TimerCountup

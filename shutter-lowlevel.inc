@@ -45,12 +45,12 @@ quicke res 1
 quickt res 1
 quickr res 1
 
-exposure res 4
-timer res 4
-repeat res 4
+exposure res 3
+timer res 3
+repeat res 3
 
-exposurew res 4
-timerw res 4
+exposurew res 3
+timerw res 3
 
 Loopv1 res 1
 
@@ -111,12 +111,10 @@ MYINIT macro
 		LoadTime exposure, 0, 1, 0
 		LoadTime timer, 0, 2, 0
 		
-		movlw ToBD(1)
-		movwf repeat
-		movlw 0
-		movwf repeat+1
+		clrf repeat
 		clrf repeat+2
-		
+		movlw 5
+		movwf repeat+1
 	endm
 
 
